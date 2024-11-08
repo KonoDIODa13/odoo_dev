@@ -1,0 +1,136 @@
+<odoo>
+    <data>
+        <!-- Vista Tree -->
+        <record model="ir.ui.view" id="vista_filmotecajaime_pelicula_tree">
+            <field name="name">vista_filmotecajaime_pelicula_tree</field>
+            <field name="model">filmotecajaime.pelicula</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="film_date"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="is_spanish"/>
+                    <field name="image" widget="image"/>
+                    <field name="language"/>
+                    <field name="opinion"/>
+                    <field name="color"/>
+                    <field name="genero_id"/>
+                    <field name="tecnicas_id"/>
+                    <button name="f_create" string="Crear" class="btn oe_hightlight" type="object" />
+                    <button name="f_update" string="Modificar" class="oe_hightlight" type="object" />
+                    <button name="f_delete" string="Eliminar" class="oe_hightlight" type="object" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vista Form -->
+        <record id="vista_filmotecajaime_pelicula_form" model="ir.ui.view">
+            <field name="name">vista_filmotecajaime_pelicula_form</field>
+            <field name="model">filmotecajaime.pelicula</field>
+            <field name="arch" type="xml">
+                <form string="formulario_pelicula">
+                    <sheet>
+                        <!-- Agregando botones -->
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_color" type="object" class="oe_stat_button" string="Pelicula color" icon="fa-paint-brush"/>
+                        </div>
+                        <group name="group_top">
+                            <group name="group_left">
+                                <field name="code"/>
+                                <field name="name"/>
+                                <field name="description"/>
+                                <field name="film_date"/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                                <field name="tecnicas_id"/>
+                            </group>
+
+                            <group name="group_right">
+                                <field name="is_spanish"/>
+                                <field name="image" widget="image"/>
+                                <field name="language"/>
+                                <field name="opinion"/>
+                                <field name="color"/>
+                                <field name="genero_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Gestión de kanban para las imagenes -->
+        <record id="vista_filmotecajaime_pelicula_kanban" model="ir.ui.view">
+            <field name="name">vista_filmotecajaime_pelicula_kanban</field>
+            <field name="model">filmotecajaime.pelicula</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="film_date"/>
+                    <template>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img alt="Cartel" t-att-src="kanban_image('filmotecajaime.pelicula','image', record.id.raw_value)"/>
+                                </div>
+                                <div class="o_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <div t-if="record.film_date.value">
+                                        <t t-esc="record.film_date.value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </template>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- vista avanzada search -->
+        <record id="vista_filmotecajaime_pelicula_search" model="ir.ui.view">
+            <field name="name">vista_filmotecajaime_pelicula_search</field>
+            <field name="model">filmotecajaime.pelicula</field>
+            <field name="arch" type="xml">
+                <search string="Filtrar películas">
+                    <field name="name"/>
+                    <field name="is_spanish"/>
+                    <field name="film_date"/>
+                    <field name="color"/>
+                    <group expand="0" string="Group By">
+                        <filter name="groupby_is_spanish" string="Idioma" domain="[('is_spanish', '=', 'True')]" context="{'group_by':'is_spanish'}" help="Agrupar por idioma" />
+                        <filter name="groupby_film_date" string="Fecha" context="{'group_by':'film_date'}" help="Agrupar por fecha" />
+                    </group>
+                    <filter name="filter_by_color" string="Color" domain="[('color', '=', 'True')]" help="Películas en color"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Gestión acciones -->
+        <record model="ir.actions.act_window" id="accion_filmotecajaime_pelicula_form">
+            <field name="name">Listado de Películas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">filmotecajaime.pelicula</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+          Películas
+                </p>
+                <p> Click <strong> 'Crear' </strong> para añadir nuevos elementos
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Filmoteca del alumno JIMYYYYYYYYYYYYYY" id="menu_filmotecajaime_raiz"/>
+
+        <menuitem name="Listado de peliculas" id="menu_filmotecajaime_listado_peliculas" parent="menu_filmotecajaime_raiz"/>
+
+        <!-- acciones -->
+        <menuitem name="Consultar" id="menu_filmotecajaime_peliculas" parent="menu_filmotecajaime_listado_peliculas" action="accion_filmotecajaime_pelicula_form"/>
+
+    </data>
+</odoo>
