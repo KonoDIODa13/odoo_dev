@@ -46,7 +46,7 @@ class task(models.Model):
     def _get_sprint(self):
         for task in self:
             sprints = self.env["managejaime.sprint"].search(
-                [("project.id", "=", task.history.project.id)]
+                [("project_id.id", "=", task.history_id.project_id.id)]
             )
             found = False
             for sprint in sprints:
@@ -54,10 +54,10 @@ class task(models.Model):
                     isinstance(sprint.end_date, datetime.datetime)
                     and sprint.end_date > datetime.datetime.now()
                 ):
-                    task.sprint = sprint.id
+                    task.sprint_id = sprint.id
                     found = True
             if not found:
-                task.sprint = False
+                task.sprint_id = False
 
 
 class sprint(models.Model):
@@ -121,19 +121,22 @@ class history(models.Model):
     tasks_id = fields.One2many(
         string="Tareas", comodel_name="managejaime.task", inverse_name="history_id"
     )
-    # used_technologies = fields.Many2many(
-    # "manage.technology", compute="_get_used_technologies"
-    # )
+    
+    used_technologies = fields.Many2many(
+    "manage.technology", compute="_get_used_technologies"
+    )
 
-    # def _get_used_technologies(self):
-    # for history in self:
-    # technologies = None
-    # for task in history.tasks_id:
-    # if not technologies:
-    # technologies = task.technologys_id
-    # else:
-    # technologies = technologies + task.technologys_id
-    # history.used_technologies = technologies
+    
+    def _get_used_technologies(self):
+        for history in self:
+            technologies = None
+            for task in history.tasks_id:
+                if not technologies:
+                    technologies = task.technologys_id
+                else:
+                    technologies = technologies + task.technologys_id
+        history.used_technologies = technologies
+    
 
 
 class technology(models.Model):

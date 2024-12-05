@@ -10,7 +10,7 @@
                     <field name="description"/>
                     <field name="project_id"/>
                     <field name="tasks_id"/>
-                    <!--<field name="used_technologies"/>--> 
+                    <!--<field name="used_technologies"/>-->
                 </tree>
             </field>
         </record>
@@ -27,7 +27,7 @@
                             <field name="description"/>
                             <field name="project_id"/>
                             <field name="tasks_id"/>
-                           <!--<field name="used_technologies"/>--> 
+                            <!--<field name="used_technologies"/>-->
                         </group>
                     </sheet>
                 </form>
