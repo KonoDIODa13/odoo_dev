@@ -32,6 +32,7 @@
         'views/project.xml',
         'views/history.xml',
         'views/technology.xml',
+        #'views/developer.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

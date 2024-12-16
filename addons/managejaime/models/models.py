@@ -121,12 +121,11 @@ class history(models.Model):
     tasks_id = fields.One2many(
         string="Tareas", comodel_name="managejaime.task", inverse_name="history_id"
     )
-    
+
     used_technologies = fields.Many2many(
-    "manage.technology", compute="_get_used_technologies"
+        "manage.technology", compute="_get_used_technologies"
     )
 
-    
     def _get_used_technologies(self):
         for history in self:
             technologies = None
@@ -136,7 +135,6 @@ class history(models.Model):
                 else:
                     technologies = technologies + task.technologys_id
         history.used_technologies = technologies
-    
 
 
 class technology(models.Model):
@@ -154,3 +152,14 @@ class technology(models.Model):
         colum1="technologys_ids",
         colum2="tasks_ids",
     )
+
+"""class developer(models.Model):
+    _name = "res.partner"
+    _inherits = "res.partner"
+
+    technologies = fields.Many2many(
+        "manage.technology",
+        relation="developer_technologies",
+        column1="developer_id",
+        column2="technologies_id",
+    )"""
