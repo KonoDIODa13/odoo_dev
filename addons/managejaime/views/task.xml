@@ -9,8 +9,8 @@
                     <field name="name"/>
                     <field name="description"/>
                     <field name="start_date"/>
+                    <field name="state"/>
                     <field name="end_date"/>
-                    <field name="is_paused"/>
                     <field name="sprint_id"/>
                     <field name="history_id"/>
                     <field name="technologys_id"/>
@@ -24,13 +24,23 @@
             <field name="model">managejaime.task</field>
             <field name="arch" type="xml">
                 <form string="formulario_task">
+                <header attrs="{'invisible': [('id', '=', False)]}">
+                <!--   
+                Ampliación: botones para poder cambiar el estado de la tarea.
+                -->
+                <button name="reanudarTask" type="object" string="Reanudar" state="new" class="btn-primary"/>
+                <button name="pausarTask" type="object" string="Pausar" state="new,in_progress" class="btn-secondary"/>
+                <button name="cancelarTask" type="object" string="Cancelar" state="new,in_progress,paused" class="btn-danger"/>
+                <button name="completarTask" type="object" string="Completar" state="new,in_progress,paused" class="btn-success"/>
+                </header>
                     <sheet>
                         <group name="group_top">
                             <field name="name"/>
                             <field name="description"/>
                             <field name="start_date"/>
                             <field name="end_date"/>
-                            <field name="is_paused"/>
+                            <field name="state" widget="statusbar" options="{'clickable': False}"
+                             attrs="{'invisible': [('id', '=', False)]}"/>
                             <field name="sprint_id"/>
                             <field name="history_id"/>
                             <field name="technologys_id"/>

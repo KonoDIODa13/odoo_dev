@@ -15,7 +15,24 @@ class task(models.Model):
     description = fields.Text(string="Descripción")
     start_date = fields.Datetime(string="fecha Inicio")
     end_date = fields.Datetime(string="fecha Fin")
-    is_paused = fields.Boolean(string="Pausado")
+    # is_paused = fields.Boolean(string="Pausado")
+
+    """ Ampliación de proyecto: creacion del campo estado"""
+    state = fields.Selection(
+        [
+            ("new", "Nuevo"),
+            ("in_progress", "En Progreso"),
+            ("paused", "Pausado"),
+            ("completed", "Completado"),
+            ("cancelled", "Cancelado"),
+        ],
+        string="Estado",
+        default="new",
+        required=True,
+    )
+
+    state_color = fields.Char(compute="_compute_state_color")
+
     sprint_id = fields.Many2one(
         "managejaime.sprint",
         string="Sprint",
@@ -58,6 +75,43 @@ class task(models.Model):
                     found = True
             if not found:
                 task.sprint_id = False
+
+    def reanudarTask(self):
+        for task in self:
+            if task.state in ["new", "paused"]:
+                task.state = "in_progress"
+
+    def pausarTask(self):
+        for task in self:
+            if task.state in ["new", "in_progress"]:
+                task.state = "paused"
+
+    def cancelarTask(self):
+        for task in self:
+            if task.state in ["new", "in_progress", "paused"]:
+                task.state = "cancelled"
+                task._finalizarTarea()
+
+    def completarTask(self):
+        for task in self:
+            if task.state in ["new", "in_progress", "paused"]:
+                task.state = "completed"
+                task._finalizarTarea()
+
+    def _finalizarTarea(self):
+        for task in self:
+            task.end_date = datetime.datetime.now()
+
+    def _compute_state_color(self):
+        for task in self:
+            colors = {
+                "new": "blue",
+                "in_progress": "green",
+                "paused": "orange",
+                "completed": "grey",
+                "cancelled": "red",
+            }
+            task.state_color = colors.get(task.state, "black")
 
 
 class sprint(models.Model):
@@ -152,6 +206,7 @@ class technology(models.Model):
         colum1="technologys_ids",
         colum2="tasks_ids",
     )
+
 
 """class developer(models.Model):
     _name = "res.partner"
